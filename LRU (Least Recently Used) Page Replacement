@@ -1,41 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int findLRU(int time[], int frames) {
+    int min = time[0], pos = 0;
+    for (int i = 1; i < frames; i++) {
+        if (time[i] < min) {
+            min = time[i];
+            pos = i;
+        }
+    }
+    return pos;
+}
+
 int main() {
-    int n, f, *pages, *frames, *time, pf = 0, counter = 0;
-    printf("Enter number of pages and frames: ");
-    scanf("%d %d", &n, &f);
+    int n, frames, pageFaults = 0, counter = 0;
+    int *pages, *memory, *time;
 
-    pages = malloc(n * sizeof(int));
-    frames = malloc(f * sizeof(int));
-    time = malloc(f * sizeof(int));
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
 
-    for (int i = 0; i < f; i++) frames[i] = -1;
-    for (int i = 0; i < n; i++) scanf("%d", &pages[i]);
+    pages = (int *)malloc(n * sizeof(int));
+    printf("Enter page reference string:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d", &frames);
+
+    memory = (int *)malloc(frames * sizeof(int));
+    time = (int *)malloc(frames * sizeof(int));
+
+    for (int i = 0; i < frames; i++) {
+        memory[i] = -1;
+        time[i] = 0;
+    }
 
     for (int i = 0; i < n; i++) {
         int found = 0;
-        for (int j = 0; j < f; j++) {
-            if (frames[j] == pages[i]) {
+        for (int j = 0; j < frames; j++) {
+            if (memory[j] == pages[i]) {
+                counter++;
+                time[j] = counter;
                 found = 1;
-                time[j] = ++counter;
                 break;
             }
         }
+
         if (!found) {
-            int pos = 0, min = time[0];
-            for (int j = 1; j < f; j++) {
-                if (time[j] < min) {
-                    min = time[j];
-                    pos = j;
-                }
-            }
-            frames[pos] = pages[i];
-            time[pos] = ++counter;
-            pf++;
+            int pos = findLRU(time, frames);
+            counter++;
+            memory[pos] = pages[i];
+            time[pos] = counter;
+            pageFaults++;
         }
     }
-    printf("Total Page Faults: %d\n", pf);
-    free(pages); free(frames); free(time);
+
+    printf("Total Page Faults = %d\n", pageFaults);
+
+    free(pages);
+    free(memory);
+    free(time);
     return 0;
 }
+
