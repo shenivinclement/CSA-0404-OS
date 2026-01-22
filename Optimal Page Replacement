@@ -1,48 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-    int n, f, *pages, *frames, pf = 0;
-    printf("Enter number of pages and frames: ");
-    scanf("%d %d", &n, &f);
+int predict(int pages[], int memory[], int n, int index, int frames) {
+    int farthest = index, pos = -1;
 
-    pages = malloc(n * sizeof(int));
-    frames = malloc(f * sizeof(int));
-    for (int i = 0; i < f; i++) frames[i] = -1;
-    for (int i = 0; i < n; i++) scanf("%d", &pages[i]);
+    for (int i = 0; i < frames; i++) {
+        int j;
+        for (j = index; j < n; j++) {
+            if (memory[i] == pages[j]) {
+                if (j > farthest) {
+                    farthest = j;
+                    pos = i;
+                }
+                break;
+            }
+        }
+        if (j == n)
+            return i;
+    }
+    return (pos == -1) ? 0 : pos;
+}
+
+int main() {
+    int n, frames, pageFaults = 0;
+    int *pages, *memory;
+
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
+
+    pages = (int *)malloc(n * sizeof(int));
+    printf("Enter page reference string:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &pages[i]);
+
+    printf("Enter number of frames: ");
+    scanf("%d", &frames);
+
+    memory = (int *)malloc(frames * sizeof(int));
+    for (int i = 0; i < frames; i++)
+        memory[i] = -1;
 
     for (int i = 0; i < n; i++) {
         int found = 0;
-        for (int j = 0; j < f; j++) {
-            if (frames[j] == pages[i]) {
+        for (int j = 0; j < frames; j++) {
+            if (memory[j] == pages[i]) {
                 found = 1;
                 break;
             }
         }
+
         if (!found) {
-            int pos = -1, farthest = i + 1;
-            for (int j = 0; j < f; j++) {
-                int k;
-                for (k = i + 1; k < n; k++) {
-                    if (frames[j] == pages[k]) {
-                        if (k > farthest) {
-                            farthest = k;
-                            pos = j;
-                        }
-                        break;
-                    }
-                }
-                if (k == n) {
-                    pos = j;
-                    break;
-                }
-            }
-            if (pos == -1) pos = 0;
-            frames[pos] = pages[i];
-            pf++;
+            int pos = predict(pages, memory, n, i + 1, frames);
+            memory[pos] = pages[i];
+            pageFaults++;
         }
     }
-    printf("Total Page Faults: %d\n", pf);
-    free(pages); free(frames);
+
+    printf("Total Page Faults = %d\n", pageFaults);
+
+    free(pages);
+    free(memory);
     return 0;
 }
