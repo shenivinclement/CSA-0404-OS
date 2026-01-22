@@ -2,40 +2,30 @@
 #include <stdlib.h>
 
 int main() {
-    int total_blocks, *disk, start, len;
-    printf("Enter total blocks on disk: ");
-    scanf("%d", &total_blocks);
-    disk = calloc(total_blocks, sizeof(int));
+    int files;
+    int *start, *length;
 
-    while (1) {
-        printf("Enter start block and length: ");
-        scanf("%d %d", &start, &len);
+    printf("Enter number of files: ");
+    scanf("%d", &files);
 
-        int can_allocate = 1;
-        if (start + len > total_blocks) {
-            can_allocate = 0;
-        } else {
-            for (int i = start; i < start + len; i++) {
-                if (disk[i] == 1) {
-                    can_allocate = 0;
-                    break;
-                }
-            }
-        }
+    start = (int *)malloc(files * sizeof(int));
+    length = (int *)malloc(files * sizeof(int));
 
-        if (can_allocate) {
-            for (int i = start; i < start + len; i++) disk[i] = 1;
-            printf("Allocated successfully\n");
-        } else {
-            printf("Allocation failed\n");
-        }
-
-        int cont;
-        printf("1 to continue, 0 to exit: ");
-        scanf("%d", &cont);
-        if (!cont) break;
+    for (int i = 0; i < files; i++) {
+        printf("Enter start block and length of file %d: ", i + 1);
+        scanf("%d %d", &start[i], &length[i]);
     }
 
-    free(disk);
+    printf("\nFile No\tStart Block\tLength\tBlocks Allocated\n");
+    for (int i = 0; i < files; i++) {
+        printf("%d\t%d\t\t%d\t", i + 1, start[i], length[i]);
+        for (int j = 0; j < length[i]; j++)
+            printf("%d ", start[i] + j);
+        printf("\n");
+    }
+
+    free(start);
+    free(length);
     return 0;
 }
+
