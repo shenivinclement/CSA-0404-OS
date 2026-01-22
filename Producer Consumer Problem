@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int buffer[10], bufsize = 10, in = 0, out = 0, choice, item;
+    while (1) {
+        printf("\n1. Produce 2. Consume 3. Exit: ");
+        scanf("%d", &choice);
+        if (choice == 1) {
+            if ((in + 1) % bufsize == out) printf("Buffer Full\n");
+            else {
+                printf("Enter item: ");
+                scanf("%d", &item);
+                buffer[in] = item;
+                in = (in + 1) % bufsize;
+            }
+        } else if (choice == 2) {
+            if (in == out) printf("Buffer Empty\n");
+            else {
+                item = buffer[out];
+                printf("Consumed: %d\n", item);
+                out = (out + 1) % bufsize;
+            }
+        } else exit(0);
+    }
+    return 0;
+}
