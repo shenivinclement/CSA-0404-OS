@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, f, *pages, *frames, pf = 0, count = 0;
+    printf("Enter number of pages and frames: ");
+    scanf("%d %d", &n, &f);
+
+    pages = malloc(n * sizeof(int));
+    frames = malloc(f * sizeof(int));
+
+    for (int i = 0; i < f; i++) frames[i] = -1;
+    for (int i = 0; i < n; i++) scanf("%d", &pages[i]);
+
+    for (int i = 0; i < n; i++) {
+        int found = 0;
+        for (int j = 0; j < f; j++) {
+            if (frames[j] == pages[i]) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            frames[count] = pages[i];
+            count = (count + 1) % f;
+            pf++;
+        }
+    }
+    printf("Total Page Faults: %d\n", pf);
+    free(pages); free(frames);
+    return 0;
+}
