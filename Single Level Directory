@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+
+struct {
+    char dname[10], fname[10][10];
+    int fcnt;
+} dir;
+
+int main() {
+    int i, ch;
+    dir.fcnt = 0;
+    printf("Enter name of directory: ");
+    scanf("%s", dir.dname);
+    while(1) {
+        printf("\n1. Create File  2. List Files  3. Exit\nEnter Choice: ");
+        scanf("%d", &ch);
+        if(ch == 1) {
+            printf("Enter file name: ");
+            scanf("%s", dir.fname[dir.fcnt++]);
+        } else if(ch == 2) {
+            printf("Directory: %s\nFiles: ", dir.dname);
+            for(i=0; i<dir.fcnt; i++) printf("%s ", dir.fname[i]);
+            printf("\n");
+        } else break;
+    }
+    return 0;
+}
