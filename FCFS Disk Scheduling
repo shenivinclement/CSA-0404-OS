@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int queue[20], n, head, i, seek = 0;
+    float avg;
+
+    printf("Enter number of requests: "); // Input: 7
+    scanf("%d", &n);
+    printf("Enter request sequence: "); // Input: 82 170 43 140 24 16 190
+    for(i=0; i<n; i++) scanf("%d", &queue[i]);
+    printf("Enter initial head position: "); // Input: 50
+    scanf("%d", &head);
+
+    for(i=0; i<n; i++) {
+        seek += abs(head - queue[i]);
+        head = queue[i];
+    }
+
+    printf("\nTotal Seek Operations: %d\n", seek);
+    return 0;
+}
