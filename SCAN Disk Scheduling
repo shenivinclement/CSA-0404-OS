@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int queue[20], n, head, max, i, j, temp, seek = 0;
+    printf("Enter number of requests: "); // Input: 7
+    scanf("%d", &n);
+    printf("Enter request sequence: "); // Input: 82 170 43 140 24 16 190
+    for(i=0; i<n; i++) scanf("%d", &queue[i]);
+    printf("Enter initial head: "); // Input: 50
+    scanf("%d", &head);
+    printf("Enter disk limit: "); // Input: 199
+    scanf("%d", &max);
+
+    // Sorting the sequence
+    for(i=0; i<n; i++)
+        for(j=i+1; j<n; j++)
+            if(queue[i] > queue[j]) { temp = queue[i]; queue[i] = queue[j]; queue[j] = temp; }
+
+    // SCAN Logic (Moving towards higher values)
+    seek = (max - head) + (max - queue[0]);
+    printf("Total Seek Operations: %d\n", seek);
+    return 0;
+}
