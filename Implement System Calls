@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+
+int main() {
+    struct stat st;
+    stat("demo.txt", &st);
+    printf("Size: %ld bytes\n", st.st_size);
+
+    int fd = open("demo.txt", O_RDONLY);
+    lseek(fd, 3, SEEK_SET); // Skip 3 bytes
+    char c;
+    read(fd, &c, 1);
+    printf("The 4th letter is: %c\n", c);
+    close(fd);
+
+    DIR *d = opendir(".");
+    struct dirent *de = readdir(d);
+    printf("First file found: %s\n", de->d_name);
+    closedir(d);
+    return 0;
+}
