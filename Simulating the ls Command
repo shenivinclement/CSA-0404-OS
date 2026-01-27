@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <dirent.h>
+
+int main() {
+    DIR *d = opendir(".");
+    struct dirent *f;
+
+    if (d == NULL) return 0;
+
+    printf("LS COMMAND OUTPUT:\n");
+    while ((f = readdir(d)) != NULL) {
+        // Skip hidden files that start with a dot
+        if (f->d_name[0] != '.') {
+            printf("%s\t", f->d_name);
+        }
+    }
+    printf("\n");
+    closedir(d);
+    return 0;
+}
