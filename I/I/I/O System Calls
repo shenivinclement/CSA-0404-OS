@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main() {
+    struct stat s;
+    DIR *d;
+    struct dirent *dir;
+    int fd;
+    char buf[10];
+
+    // 1. stat: Check file info
+    stat("hello.txt", &s);
+    printf("File Size: %ld bytes\n", s.st_size);
+
+    // 2. open & lseek: Open and jump 5 steps ahead
+    fd = open("hello.txt", O_RDONLY);
+    if(fd != -1) {
+        lseek(fd, 5, SEEK_SET); 
+        read(fd, buf, 4);
+        buf[4] = '\0';
+        printf("Data at offset 5: %s\n", buf);
+        close(fd);
+    }
+
+    // 3. opendir & readdir: List everything in current folder
+    d = opendir(".");
+    printf("\nFiles in folder:\n");
+    while ((dir = readdir(d)) != NULL) {
+        printf("%s\n", dir->d_name);
+    }
+    closedir(d);
+
+    return 0;
+}
